@@ -1,0 +1,23 @@
+#!/bin/bash
+# 
+# Usage: mdk [ n ]
+#
+# Produce (make) _n_ DES keys. Default is 1.
+#
+
+function mdk () {
+    cd  ~/.wine-softoken/drive_c/Program\ Files/Secure\ Computing/SofToken-II/
+    export WINEPREFIX=~/.wine-softoken
+    PASSWORD=4815926
+    USERID=fbicknel
+    DES=$(wine Console_UI.exe $USERID <<<$PASSWORD 2>/dev/null | tail -1 | cut -c30-37)
+}
+
+NUM_KEYS=${1:-1}
+# set -x
+while [ $NUM_KEYS -gt 0 ]; do
+    mdk
+    echo $DES
+    let "NUM_KEYS = $NUM_KEYS - 1"
+done
+exit 0
