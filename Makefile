@@ -5,12 +5,14 @@ filelist := $$(cat MANIFEST)
 install:
 	test -d $(prefix) || mkdir -p $(prefix)/bin
 	for file in $(filelist); do \
-		install -m 0755 $$file $(prefix)/bin; \
+		install -m 0755 bin/$$file $(prefix)/bin; \
 	done 
+	ln $(prefix)/bin/makeDESkeys $(prefix)/bin/mdk
 
 uninstall:
 	for file in $(filelist); do \
 		rm $(prefix)/bin/$$file ; \
 	done
+	rm $(prefix)/bin/mdk
 
 .PHONY: install

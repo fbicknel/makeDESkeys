@@ -3,7 +3,8 @@
 function mdk () {
     cd  ~/.wine-softoken/drive_c/Program\ Files/Secure\ Computing/SofToken-II/
     export WINEPREFIX=~/.wine-softoken
-    PASSWORD=4815926
+    PASSFILE='~/.passwords/sofToken'
+    PASSWORD=$(cat $PASSFILE)
     USERID=fbicknel
     DES=$(wine Console_UI.exe $USERID <<<$PASSWORD | tail -1 | cut -c30-37)
 }

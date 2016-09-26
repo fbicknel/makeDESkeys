@@ -1,0 +1,40 @@
+#!/bin/bash
+
+function initialize () {
+    echo "No password file found; let's make one."
+    test -d $(dirname $PASSFILE) || mkdir -p $(dirname $PASSFILE)
+    read -p "Enter your softoken PIN here: " PIN
+    set -x
+    echo "$PIN" > $PASSFILE
+    chmod 600 $PASSFILE
+}
+
+function mdk () {
+    cd  ~/.wine-softoken/drive_c/Program\ Files/Secure\ Computing/SofToken-II/
+    export WINEPREFIX=~/.wine-softoken
+    PASSFILE="$HOME/.passwords/sofToken"
+    test -r $PASSFILE || initialize
+    PASSWORD=$(cat $PASSFILE)
+    USERID=fbicknel
+    DES=$(wine Console_UI.exe $USERID <<<$PASSWORD | tail -1 | cut -c30-37)
+}
+
+CALLED=$(basename $0)
+if [ $CALLED == 'makeDESkeys' ]; then
+    mdk
+    echo $DES | xclip -i -selection p
+    echo "Key $DES is on your clipboard."
+elif [ $CALLED == 'mdk' ]; then
+    NUM_KEYS=${1:-1}
+    # set -x
+    while [ $NUM_KEYS -gt 0 ]; do
+        mdk
+        echo $DES
+        let "NUM_KEYS = $NUM_KEYS - 1"
+    done
+else
+    echo "Unrecognized program name: $CALLED."
+    echo "Maybe a link went astray somewhere?"
+    exit 2
+fi
+exit 0

@@ -1,8 +1,0 @@
-#!/bin/bash
-cd  ~/.wine-softoken/drive_c/Program\ Files/Secure\ Computing/SofToken-II/
-export WINEPREFIX=~/.wine-softoken
-PASSWORD=4815926
-USERID=fbicknel
-DES=$(wine Console_UI.exe $USERID <<<$PASSWORD | tail -1 | cut -c30-37)
-echo $DES | xclip -i -selection p
-echo "Key $DES is on your clipboard."
