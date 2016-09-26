@@ -3,8 +3,8 @@
 function initialize () {
     echo "No password file found; let's make one."
     test -d $(dirname $PASSFILE) || mkdir -p $(dirname $PASSFILE)
+    chmod 700 $(dirname $PASSFILE)
     read -p "Enter your softoken PIN here: " PIN
-    set -x
     echo "$PIN" > $PASSFILE
     chmod 600 $PASSFILE
 }
@@ -26,7 +26,6 @@ if [ $CALLED == 'makeDESkeys' ]; then
     echo "Key $DES is on your clipboard."
 elif [ $CALLED == 'mdk' ]; then
     NUM_KEYS=${1:-1}
-    # set -x
     while [ $NUM_KEYS -gt 0 ]; do
         mdk
         echo $DES
