@@ -15,4 +15,6 @@ uninstall:
 	done
 	rm $(prefix)/bin/mdk
 
-.PHONY: install
+reinstall: uninstall install
+
+.PHONY: install uninstall reinstall
