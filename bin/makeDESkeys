@@ -19,11 +19,37 @@ function mdk () {
     DES=$(wine Console_UI.exe $USERID <<<$PASSWORD | tail -1 | cut -c30-37)
 }
 
+function rdk () {
+    DES=$(keyserv --encrypted)
+}
+
+function enclipboard () {
+    myDES=$1
+    if [ "$SYSTEM" == "Darwin" ]; then # it's mac os x
+        CLIP=pbcopy
+    else
+        CLIP='xclip -i -selection p'
+    fi
+    echo $myDES | $CLIP
+    echo "Key $myDES is on your clipboard."
+    return
+}
+
+SYSTEM=$(uname -s)
 CALLED=$(basename $0)
 if [ $CALLED == 'makeDESkeys' ]; then
     mdk
-    echo $DES | xclip -i -selection p
-    echo "Key $DES is on your clipboard."
+    enclipboard $DES
+elif [ $CALLED == 'readDESkeys' ]; then
+    rdk
+    enclipboard $DES
+elif [ $CALLED == 'rdk' ]; then
+    NUM_KEYS=${1:-1}
+    while [ $NUM_KEYS -gt 0 ]; do
+        rdk
+        echo $DES
+        let "NUM_KEYS = $NUM_KEYS - 1"
+    done
 elif [ $CALLED == 'mdk' ]; then
     NUM_KEYS=${1:-1}
     while [ $NUM_KEYS -gt 0 ]; do
