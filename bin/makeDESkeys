@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH=/usr/bin:/bin:$HOME/bin
+export PATH=/usr/bin:/bin:$HOME/bin:/usr/local/bin
 
 function initialize () {
     echo "No password file found; let's make one."
