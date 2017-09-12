@@ -2,7 +2,7 @@
 
 OTP="/tmp/1timepw.$LOGNAME"
 CONF=/etc/vpnc/default.conf
-DES=$(mdk)
+DES=$(rdk)
 echo "Xauth password $DES" > $OTP
 sudo /usr/sbin/vpnc-connect $CONF $OTP
 /bin/rm $OTP
