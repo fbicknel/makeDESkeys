@@ -1,0 +1,54 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use v5.10;
+
+use Getopt::Long;
+
+my $index_file = "keys.idx";
+my $keys_file  = "keys";
+my $path       = glob("~/Dropbox/Frank/");
+my %opt;
+my @options    = qw/encrypted! index/;
+
+GetOptions(\%opt, @options) or die "Bad options";
+
+$opt{encrypted} = 1 unless defined $opt{encrypted}; 
+open(my $idx_fh, "<", $path . $index_file) or die "Whoops: no index file: $! " . $path . $index_file . "\n";
+
+chomp(my $index = <$idx_fh>);
+
+if ($opt{index}) { # just a query?
+    say "Index stands now at: $index";
+    exit 0;
+}
+
+unless($index =~ /^\d+/) {
+    die("Looks like ". $path . $index_file . " had a bad index value.");
+}
+eval {
+    local $SIG{__DIE__};
+    no warnings 'all';
+    $index = $index + 0;
+};
+die("Looks like " . $path . $index_file . " had a bad index value: " . $@) if $@;
+
+close $idx_fh;
+
+my @key_data;
+if ($opt{encrypted}) {
+    my $filename = $path . $keys_file;
+    @key_data = `gpg --no-tty -d $filename 2>/dev/null`;
+} else {
+    open(my $dat_fh, "<", $path . $keys_file)  or die "Whoops: no data file: $! "  . $path . $keys_file  . "\n";
+    @key_data = <$dat_fh>;
+    close $dat_fh;
+}
+if ($index > $#key_data) {
+    die "Seems you need to reset your key data: the index points off the end of the data.\n";
+} else {
+    print $key_data[$index];
+    open($idx_fh, ">", $path . $index_file) or die "I couldn't write the index file: $! " . $path. $index_file . "\n";
+    $index += 1;
+    print $idx_fh $index;
+}
