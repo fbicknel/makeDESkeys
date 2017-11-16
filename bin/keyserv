@@ -10,6 +10,7 @@ my $keys_file  = "keys";
 my $path       = glob("~/Dropbox/Frank/");
 my %opt;
 my @options    = qw/encrypted! index/;
+my $filename   = $path . $keys_file;
 
 GetOptions(\%opt, @options) or die "Bad options";
 
@@ -19,7 +20,9 @@ open(my $idx_fh, "<", $path . $index_file) or die "Whoops: no index file: $! " .
 chomp(my $index = <$idx_fh>);
 
 if ($opt{index}) { # just a query?
-    say "Index stands now at: $index";
+    my @key_data = `gpg2 --no-tty -d $filename 2>/dev/null`;
+    my $filecount = $#key_data + 1;
+    say "Index stands now at: $index / $filecount";
     exit 0;
 }
 
@@ -37,7 +40,6 @@ close $idx_fh;
 
 my @key_data;
 if ($opt{encrypted}) {
-    my $filename = $path . $keys_file;
     @key_data = `gpg2 --no-tty -d $filename 2>/dev/null`;
 } else {
     open(my $dat_fh, "<", $path . $keys_file)  or die "Whoops: no data file: $! "  . $path . $keys_file  . "\n";
