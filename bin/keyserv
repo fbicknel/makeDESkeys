@@ -38,7 +38,7 @@ close $idx_fh;
 my @key_data;
 if ($opt{encrypted}) {
     my $filename = $path . $keys_file;
-    @key_data = `gpg --no-tty -d $filename 2>/dev/null`;
+    @key_data = `gpg2 --no-tty -d $filename 2>/dev/null`;
 } else {
     open(my $dat_fh, "<", $path . $keys_file)  or die "Whoops: no data file: $! "  . $path . $keys_file  . "\n";
     @key_data = <$dat_fh>;
