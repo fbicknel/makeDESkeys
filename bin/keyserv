@@ -7,7 +7,7 @@ use Getopt::Long;
 
 my $index_file = "keys.idx";
 my $keys_file  = "keys";
-my $path       = glob("~/Dropbox/Frank/");
+my $path       = glob("~/gdrive/Frank/");
 my %opt;
 my @options    = qw/encrypted! index/;
 my $filename   = $path . $keys_file;
