@@ -13,11 +13,11 @@ install:
 
 uninstall:
 	for file in $(filelist); do \
-		rm $(prefix)/bin/$$file ; \
+		rm -f $(prefix)/bin/$$file ; \
 	done
-	rm $(prefix)/bin/mdk
-	rm $(prefix)/bin/rdk
-	rm $(prefix)/bin/readDESkeys
+	rm -f $(prefix)/bin/mdk
+	rm -f $(prefix)/bin/rdk
+	rm -f $(prefix)/bin/readDESkeys
 
 reinstall: uninstall install
 
